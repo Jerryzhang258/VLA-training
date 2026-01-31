@@ -494,7 +494,7 @@ def main():
     parser.add_argument(
         '--zarr_path',
         type=str,
-        default=r'/home/liuchaoyi/openpi_chaoyi/openpi_chaoyi/data/_test_127.zarr.zip',
+        default=r'/home/liuchaoyi/openpi_chaoyi/openpi_chaoyi/data/example.zarr.zip',
         help='Zarr 文件路径 (.zarr 或 .zarr.zip)'
     )
     parser.add_argument(
