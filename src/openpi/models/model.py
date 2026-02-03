@@ -37,9 +37,9 @@ class ModelType(enum.Enum):
 
 # The model always expects these images
 IMAGE_KEYS = (
-    "base_0_rgb",
-    "left_wrist_0_rgb",
-    "right_wrist_0_rgb",
+    "left_image",
+    "right_image",
+    "empty",
 )
 
 

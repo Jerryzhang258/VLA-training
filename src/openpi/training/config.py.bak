@@ -508,7 +508,7 @@ class TrainConfig:
     batch_size: int = 32
     # Number of workers to use for the data loader. Increasing this number will speed up data loading but
     # will increase memory and CPU usage.
-    num_workers: int = 0
+    num_workers: int = 2
     # Number of train steps (batches) to run.
     num_train_steps: int = 30_000
 
@@ -585,7 +585,7 @@ _CONFIGS = [
                 outputs=[vb_policy.VBOutputs()],
             ),
             base_config=DataConfig(
-                prompt_from_task=False,
+                prompt_from_task=True,
             ),
         ),
 
@@ -598,11 +598,11 @@ _CONFIGS = [
         # Disable EMA for LoRA fine-tuning
         ema_decay=None,
         # Can use larger batch size with LoRA (lower memory footprint)
-        batch_size=8,
+        batch_size=64,
         num_train_steps=30000,
         exp_name="test_0130",
         # Load pre-trained weights for PaliGemma and action_expert, skip tactile components
-        weight_loader=weight_loaders.CheckpointWeightLoader("gs://openpi-assets/checkpoints/pi05_droid_jointpos/params"),
+        weight_loader=weight_loaders.CheckpointWeightLoader("gs://openpi-assets/checkpoints/pi05_base/params"),
     ),
 
 
@@ -653,7 +653,7 @@ _CONFIGS = [
                 outputs=[droid_policy.DroidOutputs()],
             ),
             base_config=DataConfig(
-                prompt_from_task=False,
+                prompt_from_task=True,
             ),
         ),
     ),
@@ -667,7 +667,7 @@ _CONFIGS = [
                 outputs=[droid_policy.DroidOutputs()],
             ),
             base_config=DataConfig(
-                prompt_from_task=False,
+                prompt_from_task=True,
             ),
         ),
     ),
@@ -681,7 +681,7 @@ _CONFIGS = [
                 outputs=[droid_policy.DroidOutputs()],
             ),
             base_config=DataConfig(
-                prompt_from_task=False,
+                prompt_from_task=True,
             ),
         ),
     ),
@@ -709,7 +709,7 @@ _CONFIGS = [
                 # This flag determines whether we load the prompt (i.e. the task instruction) from the
                 # ``task`` field in the LeRobot dataset. If set to True, the prompt will show up in
                 # a field called ``prompt`` in the input dict. The recommended setting is True.
-                prompt_from_task=False,
+                prompt_from_task=True,
             ),
             extra_delta_transform=True,
         ),
@@ -726,7 +726,7 @@ _CONFIGS = [
         model=pi0_config.Pi0Config(paligemma_variant="gemma_2b_lora", action_expert_variant="gemma_300m_lora"),
         data=LeRobotLiberoDataConfig(
             repo_id="physical-intelligence/libero",
-            base_config=DataConfig(prompt_from_task=False),
+            base_config=DataConfig(prompt_from_task=True),
             extra_delta_transform=True,
         ),
         weight_loader=weight_loaders.CheckpointWeightLoader("gs://openpi-assets/checkpoints/pi0_base/params"),
@@ -756,7 +756,7 @@ _CONFIGS = [
         model=pi0_fast.Pi0FASTConfig(action_dim=7, action_horizon=10, max_token_len=180),
         data=LeRobotLiberoDataConfig(
             repo_id="physical-intelligence/libero",
-            base_config=DataConfig(prompt_from_task=False),
+            base_config=DataConfig(prompt_from_task=True),
             extra_delta_transform=True,
         ),
         # Note that we load the pi0-FAST base model checkpoint here.
@@ -772,7 +772,7 @@ _CONFIGS = [
         ),
         data=LeRobotLiberoDataConfig(
             repo_id="physical-intelligence/libero",
-            base_config=DataConfig(prompt_from_task=False),
+            base_config=DataConfig(prompt_from_task=True),
             extra_delta_transform=True,
         ),
         weight_loader=weight_loaders.CheckpointWeightLoader("gs://openpi-assets/checkpoints/pi0_fast_base/params"),
@@ -790,7 +790,7 @@ _CONFIGS = [
         model=pi0_config.Pi0Config(pi05=True, action_horizon=10, discrete_state_input=False),
         data=LeRobotLiberoDataConfig(
             repo_id="physical-intelligence/libero",
-            base_config=DataConfig(prompt_from_task=False),
+            base_config=DataConfig(prompt_from_task=True),
             extra_delta_transform=False,
         ),
         batch_size=256,
@@ -802,7 +802,7 @@ _CONFIGS = [
         ),
         optimizer=_optimizer.AdamW(clip_gradient_norm=1.0),
         ema_decay=0.999,
-        weight_loader=weight_loaders.CheckpointWeightLoader("gs://openpi-assets/checkpoints/pi05_droid_jointpos/params"),
+        weight_loader=weight_loaders.CheckpointWeightLoader("gs://openpi-assets/checkpoints/pi05_base/params"),
         pytorch_weight_path="/path/to/your/pytorch_weight_path",
         num_train_steps=30_000,
     ),
@@ -846,7 +846,7 @@ _CONFIGS = [
         data=LeRobotAlohaDataConfig(
             repo_id="physical-intelligence/aloha_pen_uncap_diverse",
             assets=AssetsConfig(
-                assets_dir="gs://openpi-assets/checkpoints/pi05_droid_jointpos/assets",
+                assets_dir="gs://openpi-assets/checkpoints/pi05_base/assets",
                 asset_id="trossen",
             ),
             default_prompt="uncap the pen",
@@ -866,9 +866,9 @@ _CONFIGS = [
                 ]
             ),
         ),
-        weight_loader=weight_loaders.CheckpointWeightLoader("gs://openpi-assets/checkpoints/pi05_droid_jointpos/params"),
+        weight_loader=weight_loaders.CheckpointWeightLoader("gs://openpi-assets/checkpoints/pi05_base/params"),
         num_train_steps=20_000,
-        batch_size=8,
+        batch_size=64,
     ),
     #
     # Fine-tuning DROID configs.
@@ -919,11 +919,11 @@ _CONFIGS = [
             rlds_data_dir="/mnt/pi-data/kevin",
             action_space=droid_rlds_dataset.DroidActionSpace.JOINT_POSITION,
             assets=AssetsConfig(
-                assets_dir="gs://openpi-assets/checkpoints/pi05_droid_jointpos/assets/",
+                assets_dir="gs://openpi-assets/checkpoints/pi05_base/assets/",
                 asset_id="droid",
             ),
         ),
-        weight_loader=weight_loaders.CheckpointWeightLoader("gs://openpi-assets/checkpoints/pi05_droid_jointpos/params"),
+        weight_loader=weight_loaders.CheckpointWeightLoader("gs://openpi-assets/checkpoints/pi05_base/params"),
         lr_schedule=_optimizer.CosineDecaySchedule(
             warmup_steps=1_000,
             peak_lr=5e-5,
@@ -950,7 +950,7 @@ _CONFIGS = [
         data=LeRobotDROIDDataConfig(
             # Replace with your custom DROID LeRobot dataset repo id.
             repo_id="your_hf_username/my_droid_dataset",
-            base_config=DataConfig(prompt_from_task=False),
+            base_config=DataConfig(prompt_from_task=True),
             assets=AssetsConfig(
                 # Important: reuse the original DROID norm stats during fine-tuning!
                 assets_dir="gs://openpi-assets/checkpoints/pi05_droid/assets",

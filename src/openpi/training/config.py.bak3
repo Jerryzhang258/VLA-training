@@ -508,7 +508,7 @@ class TrainConfig:
     batch_size: int = 32
     # Number of workers to use for the data loader. Increasing this number will speed up data loading but
     # will increase memory and CPU usage.
-    num_workers: int = 0
+    num_workers: int = 2
     # Number of train steps (batches) to run.
     num_train_steps: int = 30_000
 
@@ -602,7 +602,7 @@ _CONFIGS = [
         num_train_steps=30000,
         exp_name="test_0130",
         # Load pre-trained weights for PaliGemma and action_expert, skip tactile components
-        weight_loader=weight_loaders.CheckpointWeightLoader("gs://openpi-assets/checkpoints/pi05_droid_jointpos/params"),
+        weight_loader=weight_loaders.CheckpointWeightLoader("gs://openpi-assets/checkpoints/pi05_base/params"),
     ),
 
 
@@ -802,7 +802,7 @@ _CONFIGS = [
         ),
         optimizer=_optimizer.AdamW(clip_gradient_norm=1.0),
         ema_decay=0.999,
-        weight_loader=weight_loaders.CheckpointWeightLoader("gs://openpi-assets/checkpoints/pi05_droid_jointpos/params"),
+        weight_loader=weight_loaders.CheckpointWeightLoader("gs://openpi-assets/checkpoints/pi05_base/params"),
         pytorch_weight_path="/path/to/your/pytorch_weight_path",
         num_train_steps=30_000,
     ),
@@ -846,7 +846,7 @@ _CONFIGS = [
         data=LeRobotAlohaDataConfig(
             repo_id="physical-intelligence/aloha_pen_uncap_diverse",
             assets=AssetsConfig(
-                assets_dir="gs://openpi-assets/checkpoints/pi05_droid_jointpos/assets",
+                assets_dir="gs://openpi-assets/checkpoints/pi05_base/assets",
                 asset_id="trossen",
             ),
             default_prompt="uncap the pen",
@@ -866,7 +866,7 @@ _CONFIGS = [
                 ]
             ),
         ),
-        weight_loader=weight_loaders.CheckpointWeightLoader("gs://openpi-assets/checkpoints/pi05_droid_jointpos/params"),
+        weight_loader=weight_loaders.CheckpointWeightLoader("gs://openpi-assets/checkpoints/pi05_base/params"),
         num_train_steps=20_000,
         batch_size=8,
     ),
@@ -919,11 +919,11 @@ _CONFIGS = [
             rlds_data_dir="/mnt/pi-data/kevin",
             action_space=droid_rlds_dataset.DroidActionSpace.JOINT_POSITION,
             assets=AssetsConfig(
-                assets_dir="gs://openpi-assets/checkpoints/pi05_droid_jointpos/assets/",
+                assets_dir="gs://openpi-assets/checkpoints/pi05_base/assets/",
                 asset_id="droid",
             ),
         ),
-        weight_loader=weight_loaders.CheckpointWeightLoader("gs://openpi-assets/checkpoints/pi05_droid_jointpos/params"),
+        weight_loader=weight_loaders.CheckpointWeightLoader("gs://openpi-assets/checkpoints/pi05_base/params"),
         lr_schedule=_optimizer.CosineDecaySchedule(
             warmup_steps=1_000,
             peak_lr=5e-5,

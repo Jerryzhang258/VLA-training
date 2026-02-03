@@ -1,4 +1,22 @@
+# Python cache
+__pycache__/
+*.pyc
+*.pyo
+*.pyd
+
+# venv
+.venv*/
+venv/
+
+# logs / outputs
 wandb/
-assets/
-checkpoints/
-data/lerobot/
+logs/
+outputs/
+Sequence/
+
+# local backups
+*.bak
+*.bak*
+
+# uv
+uv.lock
